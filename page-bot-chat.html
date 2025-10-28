@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}گفتگو با چت‌بات | انوار{% endblock title %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}" />
+{% endblock styles %}
+
+{% block content %}
+<div id="chat-root" class="chat-wrap" data-api="/api/chat/">
+  <div class="chat-header">
+    <div class="title">گفتگو با چت‌بات</div>
+    <span class="badge">نسخهٔ آزمایشی</span>
+  </div>
+
+  <!-- لاگ چت با aria-live -->
+  <div
+    id="chat-window"
+    class="chat-window panel"
+    role="log"
+    aria-live="polite"
+    aria-relevant="additions text"
+    aria-busy="false"
+    tabindex="0"
+  ></div>
+
+  <button
+    id="chat-scroll-bottom"
+    class="scroll-bottom"
+    type="button"
+    aria-label="رفتن به آخر گفتگو"
+    hidden
+  >⬇️</button>
+
+  <div id="chat-typing" class="chat-typing" aria-live="polite" aria-atomic="true" hidden>
+    ربات در حال نوشتن…
+  </div>
+
+  <form id="chat-form" class="chat-input" method="post" onsubmit="return false;">
+    {% csrf_token %}
+    <textarea
+      id="chat-input"
+      rows="1"
+      placeholder="بنویس… (Enter برای ارسال، Shift+Enter برای خط جدید)"
+      autocomplete="off"
+      aria-label="پیام برای ارسال در گفتگو"
+      aria-controls="chat-window"
+    ></textarea>
+
+    <button id="chat-send" class="send" type="submit" aria-label="ارسال پیام" aria-controls="chat-window">
+      ارسال
+    </button>
+
+    <button
+      id="chat-voice"
+      type="button"
+      class="btn-voice"
+      aria-label="ضبط و ارسال صوت"
+      aria-pressed="false"
+      title="ارسال صوتی"
+      aria-controls="chat-window"
+    >🎤</button>
+  </form>
+
+  <div class="chat-disclaimer">
+    ⚠️ این ابزار صرفاً برای «غربالگری» است و «تشخیص قطعی پزشکی» نمی‌دهد. برای نتیجهٔ قطعی، از طریق بخش «ارتباط با ما» با مشاوران ما تماس بگیرید.
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+  <!-- نسخه برای شکستن کش -->
+  <script src="{% static 'js/chat.js' %}?v=9" defer></script>
+{% endblock javascripts %}

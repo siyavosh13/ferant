@@ -1,0 +1,419 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}انوار | گفتگو{% endblock title %}</title>
+
+    <!-- بهبود نمایش تِم/مرورگر -->
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- فونت فارسی (Vazirmatn) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS های پروژه -->
+    <link rel="stylesheet" href="{% static 'css/site.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" />
+
+    <!-- استایل‌های پایه + تِم تیره + CTA واحد + نوار CTA قرمز -->
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --panel-2: #0b1220;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --brand: #22d3ee;
+        --brand-2: #06b6d4;
+        --ring: rgba(34, 211, 238, 0.35);
+        --radius: 16px;
+        --danger: #f43f5e;
+        --danger-2: #ef4444;
+        --success: #10b981;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: radial-gradient(
+            1200px 1200px at 24% 8%,
+            var(--panel-2),
+            #020617 65%
+          ),
+          radial-gradient(1200px 1200px at 80% 0%, #0a152b, #020617 70%);
+        color: var(--text);
+        font-family: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Roboto,
+          Arial, sans-serif;
+        line-height: 1.6;
+      }
+      a {
+        color: var(--brand);
+        text-decoration: none;
+      }
+      a:hover {
+        color: var(--brand-2);
+      }
+
+      .skip-link {
+        position: absolute;
+        inset-inline-start: 12px;
+        inset-block-start: 12px;
+        padding: 0.55rem 0.8rem;
+        background: #fff;
+        color: #000;
+        border-radius: 10px;
+        transform: translateY(-150%);
+        transition: transform 0.2s ease;
+        z-index: 9999;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+        outline: 3px solid var(--brand);
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--brand);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      .anvar-wrap {
+        min-height: 100%;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      .anvar-container {
+        width: min(1100px, 92vw);
+        margin-inline: auto;
+        padding-inline: 1rem;
+      }
+
+      header.anvar-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: saturate(160%) blur(6px);
+        background: linear-gradient(
+          180deg,
+          rgba(2, 6, 23, 0.85),
+          rgba(2, 6, 23, 0.35)
+        );
+        border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .brand-badge {
+        inline-size: 36px;
+        block-size: 36px;
+        border-radius: 10px;
+        background: radial-gradient(
+          90% 90% at 40% 20%,
+          #0ea5e9,
+          #22d3ee 50%,
+          #06b6d4 90%
+        );
+        box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.08),
+          0 10px 30px rgba(6, 182, 212, 0.35) inset;
+      }
+
+      nav ul {
+        display: flex;
+        gap: 0.9rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      nav a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.75rem;
+        border-radius: 10px;
+        color: var(--text);
+      }
+      nav a:hover {
+        background: rgba(148, 163, 184, 0.08);
+      }
+
+      .btn-primary {
+        background: linear-gradient(180deg, var(--brand), var(--brand-2));
+        color: #00202a;
+        font-weight: 800;
+        border-radius: 12px;
+        padding: 0.55rem 0.9rem;
+        box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .btn-primary:hover {
+        filter: brightness(1.05);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(180deg, #60a5fa, #3b82f6);
+        color: #06121f;
+        font-weight: 700;
+        border-radius: 12px;
+        padding: 0.55rem 0.9rem;
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .btn-secondary:hover {
+        filter: brightness(1.05);
+      }
+
+      main.anvar-main {
+        padding: 1.2rem 0 2.2rem;
+      }
+      .panel {
+        background: linear-gradient(
+          180deg,
+          rgba(15, 23, 42, 0.75),
+          rgba(2, 6, 23, 0.7)
+        );
+        border: 1px solid rgba(148, 163, 184, 0.08);
+        border-radius: var(--radius);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35),
+          0 0 0 1px rgba(34, 211, 238, 0.06) inset;
+      }
+
+      footer.anvar-footer {
+        border-top: 1px solid rgba(148, 163, 184, 0.08);
+        background: linear-gradient(
+          180deg,
+          rgba(2, 6, 23, 0.35),
+          rgba(2, 6, 23, 0)
+        );
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.1rem 0;
+      }
+      .muted {
+        color: var(--muted);
+      }
+
+      .messages {
+        list-style: none;
+        margin: 12px 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+      .messages li {
+        padding: 0.6rem 0.8rem;
+        border-radius: 10px;
+      }
+      .messages li.success {
+        background: rgba(16, 185, 129, 0.14);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+      }
+      .messages li.error {
+        background: rgba(244, 63, 94, 0.14);
+        border: 1px solid rgba(244, 63, 94, 0.4);
+      }
+      .messages li.info {
+        background: rgba(56, 189, 248, 0.14);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+      }
+      .messages li.warning {
+        background: rgba(250, 204, 21, 0.14);
+        border: 1px solid rgba(250, 204, 21, 0.4);
+      }
+
+      /* CTA قرمز ثابت (فقط گفت‌وگو با متخصص) */
+      .emergency-help {
+        position: fixed;
+        inset-inline-end: 20px; /* در RTL = سمت چپ */
+        inset-block-end: 20px;
+        z-index: 60;
+        background: linear-gradient(180deg, var(--danger), var(--danger-2));
+        color: #fff;
+        border-radius: 999px;
+        padding: 0.6rem 1rem;
+        box-shadow: 0 10px 25px rgba(239, 68, 68, 0.45);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+      .emergency-help a {
+        color: #fff;
+        font-weight: 900;
+        letter-spacing: 0.2px;
+      }
+      @media (max-width: 640px) {
+        .emergency-help {
+          inset-inline: 12px;
+          inset-block-end: 12px;
+          border-radius: 14px;
+          justify-content: center;
+        }
+      }
+    </style>
+
+    {% block styles %}{% endblock styles %}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">پرش به محتوا</a>
+
+    <div class="anvar-wrap">
+      <header class="anvar-header">
+        <div class="anvar-container nav">
+          <div class="brand">
+            <span class="brand-badge" aria-hidden="true"></span>
+            <span>انوار</span>
+          </div>
+
+          <nav aria-label="ناوبری اصلی">
+            <ul>
+              <li>
+                <a href="/chat/" class="btn-primary" aria-label="شروع غربالگری"
+                  >شروع غربالگری</a
+                >
+              </li>
+              <li><a href="/articles/">مقالات</a></li>
+              <li><a href="{% url 'web:book_list' %}">کتاب ها </a></li>
+
+              <!-- ✅ لینک تست‌ها با نام مسیر 'tests' -->
+              <li><a href="{% url 'tests' %}">تست‌ها</a></li>
+
+              <li><a href="{% url 'web:feedback' %}">ثبت نظر</a></li>
+
+              <li><a href="/contact/">ارتباط با ما</a></li>
+
+              <li><a href="{% url 'accounts:profile' %}">پروفایل</a></li>
+              <li>
+                <a
+                  href="{% url 'accounts_specialist:apply' %}"
+                  class="btn-secondary"
+                  >ثبت‌نام متخصصین</a
+                >
+              </li>
+
+              <li>
+                <form
+                  action="{% url 'accounts:logout' %}"
+                  method="post"
+                  style="display: inline"
+                >
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="btn-secondary"
+                    style="
+                      all: unset;
+                      cursor: pointer;
+                      padding: 0.45rem 0.75rem;
+                      border-radius: 10px;
+                      display: inline-block;
+                      background: linear-gradient(180deg, #60a5fa, #3b82f6);
+                      color: #06121f;
+                      font-weight: 700;
+                    "
+                  >
+                    خروج
+                  </button>
+                </form>
+              </li>
+              <li>
+                <a href="{% url 'accounts:signup_request_otp' %}"
+                  >ورود / ثبت‌نام</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+
+      {% if messages %}
+      <div class="anvar-container" role="status" aria-live="polite">
+        <ul class="messages">
+          {% for msg in messages %}
+          <li class="{{ msg.tags }}">{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <main id="main" class="anvar-main" tabindex="-1">
+        <div class="anvar-container">
+          {% block content %}{% endblock content %}
+        </div>
+      </main>
+
+      <footer class="anvar-footer">
+        <div class="anvar-container footer-inner">
+          <div>© {% now "Y" %} انوار</div>
+          <div class="muted">این یک نمونهٔ توسعه‌ای است.</div>
+        </div>
+      </footer>
+    </div>
+    <!-- CTA قرمز: فقط گفت‌وگو با متخصص -->
+    <div class="emergency-help" role="region" aria-label="گفت‌وگو با متخصص">
+      <a
+        href="{% url 'web:request_call' %}?urgent=1"
+        aria-label="گفت‌وگو با متخصص"
+      >
+        گفت‌وگو با متخصص
+      </a>
+    </div>
+
+    <!-- ست‌ شدن CSRF کوکی برای AJAX -->
+    <form style="display: none">{% csrf_token %}</form>
+
+    <script>
+      (function () {
+        function getCookie(name) {
+          const v = `; ${document.cookie}`.split(`; ${name}=`);
+          if (v.length === 2) return v.pop().split(";").shift();
+        }
+        window.CSRF_TOKEN = getCookie("csrftoken");
+      })();
+    </script>
+    <script src="{% static 'js/app.js' %}" defer></script>
+
+    {% block javascripts %} {{ block.super }}
+    <script src="{% static 'js/chat-voice.js' %}" defer></script>
+    {% endblock javascripts %}
+  </body>
+</html>
